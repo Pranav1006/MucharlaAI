@@ -1,10 +1,11 @@
 import Title from "./title";
+import ChatBox from "./chat";
 
 export default function Home() {
   return (
     <div className="text-center">
       <Title></Title>
-      <h1>Hello Next App!!</h1>
+      <ChatBox></ChatBox>
     </div>
   );
 }
