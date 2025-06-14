@@ -4,10 +4,8 @@ import React from "react";
 
 export default function ChatBox() {
     const [messages, setMessages] = React.useState([
-        { id: 1, sender: "user", text: "Hello! How are you?" },
-        { id: 2, sender: "bot", text: "I'm good, thank you! How can I help you today?" },
-        { id: 3, sender: "user", text: "Can you tell me a joke?" },
-        { id: 4, sender: "bot", text: "Why did the developer go broke? Because he used up all his cache!" },
+        { id: 1, sender: "bot", text: "Welcome to AI!" },
+        { id: 2, sender: "bot", text: "Send whatever text prompts you like, see your chat history, and get real AI responses!"},
     ]);
 
     return (
@@ -43,6 +41,41 @@ export default function ChatBox() {
                             text,
                         },
                     ]);
+
+                    fetch("/api/ai-chat", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ message: text }),
+                        })
+                        .then(async res => {
+                            let data;
+                            try {
+                                data = await res.json();
+                            } catch {
+                                data = {};
+                            }
+                            if (!res.ok || data.error) {
+                                setMessages(prev => [
+                                    ...prev,
+                                    {
+                                        id: prev.length + 1,
+                                        sender: "bot",
+                                        text: "There was an error contacting the AI.",
+                                    },
+                                ]);
+                            } else {
+                                setMessages(prev => [
+                                    ...prev,
+                                    {
+                                        id: prev.length + 1,
+                                        sender: "bot",
+                                        text: data.response || "Sorry, I didn't understand that.",
+                                    },
+                                ]);
+                            }
+                        })
                     input.value = "";
                 }}
             >
