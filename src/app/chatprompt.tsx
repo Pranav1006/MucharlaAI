@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ChatBox() {
+export default function ChatPrompt() {
     const [userPrompt, setUserPrompt] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {

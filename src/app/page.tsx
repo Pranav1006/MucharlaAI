@@ -1,9 +1,10 @@
 import Title from "./title";
-import ChatBox from "./chat";
+import ChatPrompt from "./chatprompt";
+import ChatBox from "./chatbox";
 
 export default function Home() {
   return (
-    <div className="text-center">
+    <div>
       <Title></Title>
       <ChatBox></ChatBox>
     </div>
