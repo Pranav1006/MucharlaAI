@@ -4,7 +4,7 @@ import React from "react";
 
 export default function ChatBox() {
     const [messages, setMessages] = React.useState([
-        { id: 1, sender: "bot", text: "Welcome to AI!" },
+        { id: 1, sender: "bot", text: "Welcome to Mucharla AI!" },
         { id: 2, sender: "bot", text: "Send whatever text prompts you like, see your chat history, and get real AI responses!"},
     ]);
 
