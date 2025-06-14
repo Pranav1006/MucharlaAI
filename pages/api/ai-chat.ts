@@ -39,6 +39,6 @@ export default async function handler(
 
     return res.status(200).json({ response: data?.choices?.[0]?.message?.content?.trim() });
   } catch (err) {
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ error: err });
   }
 }

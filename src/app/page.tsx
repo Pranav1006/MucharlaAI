@@ -1,5 +1,4 @@
 import Title from "./title";
-import ChatPrompt from "./chatprompt";
 import ChatBox from "./chatbox";
 
 export default function Home() {
