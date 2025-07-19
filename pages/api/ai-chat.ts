@@ -26,7 +26,7 @@ export default async function handler(
       body: JSON.stringify({
         model: "google/gemma-3n-e4b-it",
         messages: [{ role: "user", content: message }],
-        max_tokens: 100,
+        max_tokens: 2048,
         stream: false,
       }),
     });

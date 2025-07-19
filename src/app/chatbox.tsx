@@ -1,9 +1,17 @@
 "use client"
 
 import React from "react";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
+
+type Message = {
+  id: number;
+  sender: "user" | "bot";
+  text: string;
+};
 
 export default function ChatBox() {
-    const [messages, setMessages] = React.useState([
+    const [messages, setMessages] = React.useState<Message[]>([
         { id: 1, sender: "bot", text: "Welcome to Mucharla AI!" },
         { id: 2, sender: "bot", text: "Send whatever text prompts you like, see your chat history, and get real AI responses!"},
     ]);
@@ -21,7 +29,7 @@ export default function ChatBox() {
                                 : "self-start bg-gray-200 text-gray-900"
                         }`}
                     >
-                        {msg.text}
+                        <div dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(String(marked.parse(msg.text))) }}/>
                     </div>
                 ))}
             </div>
@@ -33,12 +41,20 @@ export default function ChatBox() {
                     const input = form.elements.namedItem("message") as HTMLInputElement;
                     const text = input.value.trim();
                     if (!text) return;
+
+                    const tempId = Date.now();
+
                     setMessages(prev => [
                         ...prev,
                         {
                             id: prev.length + 1,
                             sender: "user",
                             text,
+                        },
+                        {
+                            id: tempId,
+                            sender: "bot",
+                            text: "Generating your response...",
                         },
                     ]);
 
@@ -56,25 +72,14 @@ export default function ChatBox() {
                             } catch {
                                 data = {};
                             }
-                            if (!res.ok || data.error) {
-                                setMessages(prev => [
-                                    ...prev,
-                                    {
-                                        id: prev.length + 1,
-                                        sender: "bot",
-                                        text: "There was an error contacting the AI.",
-                                    },
-                                ]);
-                            } else {
-                                setMessages(prev => [
-                                    ...prev,
-                                    {
-                                        id: prev.length + 1,
-                                        sender: "bot",
-                                        text: data.response || "Sorry, I didn't understand that.",
-                                    },
-                                ]);
-                            }
+                            
+                            const responseText = await Promise.resolve(data.response || "Sorry, I didn't understand that.");
+
+                            setMessages(prev => 
+                                prev.map(msg =>
+                                    msg.id === tempId ? { ...msg, text: responseText, id: prev.length + 1 } : msg
+                                )
+                            );
                         })
                     input.value = "";
                 }}
